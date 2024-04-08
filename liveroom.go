@@ -5,7 +5,7 @@ type LiveRoomConfig struct {
 	Room     string `json:"room"`     // RoomID is the unique identifier of the live room
 }
 
-type LiveRoomProvider func(cfg LiveRoomConfig) LiveRoom
+type LiveRoomProvider func(cfg LiveRoomConfig) (LiveRoom, error)
 
 type UserMedal struct {
 	Name   string `json:"name"`

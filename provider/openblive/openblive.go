@@ -2,8 +2,10 @@ package openblive
 
 import (
 	"context"
+	"errors"
 	openblive "github.com/aynakeya/open-bilibili-live"
 	"liveroom"
+	"liveroom/utils"
 	"strconv"
 )
 
@@ -19,27 +21,14 @@ type OpenBLiveClient struct {
 }
 
 func NewOpenBLiveClientProvider(apiServer string, appId int64) liveroom.LiveRoomProvider {
-	return func(cfg liveroom.LiveRoomConfig) liveroom.LiveRoom {
+	return func(cfg liveroom.LiveRoomConfig) (liveroom.LiveRoom, error) {
 		if cfg.Provider != ProviderName {
-			return nil
+			return nil, errors.New("invalid provider name")
 		}
 		return &OpenBLiveClient{
 			cfg:             cfg,
 			openbliveClient: openblive.NewBliveClient(appId, cfg.Room, newRemoteApiClient(apiServer)),
-		}
-	}
-}
-
-func guardLevelToPrivilege(level int) int {
-	switch level {
-	case 1:
-		return liveroom.PrivilegeUltimate
-	case 2:
-		return liveroom.PrivilegeAdvanced
-	case 3:
-		return liveroom.PrivilegeBasic
-	default:
-		return liveroom.PrivilegeNone
+		}, nil
 	}
 }
 
@@ -47,16 +36,20 @@ func (o *OpenBLiveClient) danmuHandler(data openblive.DanmakuData) {
 	if o.onMessage == nil {
 		return
 	}
+	roomId := strconv.Itoa(data.RoomID)
+	if data.FansMedalName == "" {
+		roomId = ""
+	}
 	o.onMessage(&liveroom.Message{
 		User: liveroom.User{
 			Uid:       data.OpenID,
 			Username:  data.UName,
 			Admin:     false, // not supported by open bilibili live
-			Privilege: guardLevelToPrivilege(data.GuardLevel),
+			Privilege: utils.BilibiliGuardLevelToPrivilege(data.GuardLevel),
 			Medal: liveroom.UserMedal{
 				Name:   data.FansMedalName,
 				Level:  data.FansMedalLevel,
-				RoomID: strconv.Itoa(data.RoomID),
+				RoomID: roomId,
 			},
 		},
 		Message: data.Msg,
