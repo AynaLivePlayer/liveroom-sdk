@@ -1,4 +1,4 @@
-package web
+package webdm
 
 import (
 	"encoding/json"

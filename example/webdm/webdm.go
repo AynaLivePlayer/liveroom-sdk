@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"liveroom"
-	"liveroom/provider/openblive"
+	"liveroom/provider/webdm"
 	"os"
 	"os/signal"
 	"time"
@@ -12,10 +12,10 @@ import (
 const apiServer = "http://0.0.0.0:9090"
 
 func main() {
-	provider := web.NewOpenBLiveClientProvider(apiServer, 1661006726438)
-	room := provider(liveroom.LiveRoomConfig{
-		Room:     "YOUR_CLIENT_KEY",
-		Provider: openblive.ProviderName,
+	provider := webdm.NewWebDanmuClientProvider(apiServer)
+	room, _ := provider(liveroom.LiveRoomConfig{
+		Room:     "7777",
+		Provider: webdm.ProviderName,
 	})
 	room.OnMessage(func(msg *liveroom.Message) {
 		fmt.Println(msg.User.Username, msg.User.Uid, msg.User.Medal.Name, msg.Message)
