@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"liveroom"
-	"liveroom/provider/openblive"
+	"github.com/AynaLivePlayer/liveroom"
+	"github.com/AynaLivePlayer/liveroom/provider/openblive"
 	"os"
 	"os/signal"
 	"time"

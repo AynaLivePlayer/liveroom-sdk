@@ -1,4 +1,4 @@
-module liveroom
+module github.com/AynaLivePlayer/liveroom
 
 go 1.20
 

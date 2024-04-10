@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"liveroom"
-	"liveroom/provider/webdm"
+	"github.com/AynaLivePlayer/liveroom"
+	"github.com/AynaLivePlayer/liveroom/provider/webdm"
 	"os"
 	"os/signal"
 	"time"
