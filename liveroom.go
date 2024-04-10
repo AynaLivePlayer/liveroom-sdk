@@ -26,7 +26,7 @@ func (l *LiveRoomProvider) GetName() string {
 }
 
 func (l *LiveRoomProvider) GetDescription() string {
-	return l.Name
+	return l.Description
 }
 
 func (l *LiveRoomProvider) CreateLiveRoom(cfg LiveRoomConfig) (LiveRoom, error) {
