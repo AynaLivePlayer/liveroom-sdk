@@ -13,10 +13,10 @@ import (
 const ProviderName = "biliweb"
 
 type WebDanmuClient struct {
-	cfg            liveroom.LiveRoomConfig
+	cfg            liveroom.LiveRoom
 	webDmClient    *client.Client
 	onMessage      func(msg *liveroom.Message)
-	onDisconnect   func(liveroom liveroom.LiveRoom)
+	onDisconnect   func(liveroom liveroom.ILiveRoom)
 	onStatusChange func(connected bool)
 }
 
@@ -24,7 +24,7 @@ func NewWebDanmuClientProvider(apiServer string) liveroom.ILiveRoomProvider {
 	return &liveroom.LiveRoomProvider{
 		Name:        ProviderName,
 		Description: "default web protocol. enter room id to connect.",
-		Func: func(cfg liveroom.LiveRoomConfig) (liveroom.LiveRoom, error) {
+		Func: func(cfg liveroom.LiveRoom) (liveroom.ILiveRoom, error) {
 			if cfg.Provider != ProviderName {
 				return nil, errors.New("invalid provider name")
 			}
@@ -46,7 +46,7 @@ func (w *WebDanmuClient) GetName() string {
 	return ProviderName
 }
 
-func (w *WebDanmuClient) Config() *liveroom.LiveRoomConfig {
+func (w *WebDanmuClient) Config() *liveroom.LiveRoom {
 	return &w.cfg
 }
 
@@ -86,7 +86,7 @@ func (w *WebDanmuClient) Disconnect() error {
 	return nil
 }
 
-func (w *WebDanmuClient) OnDisconnect(f func(liveroom liveroom.LiveRoom)) {
+func (w *WebDanmuClient) OnDisconnect(f func(liveroom liveroom.ILiveRoom)) {
 	w.onDisconnect = f
 }
 

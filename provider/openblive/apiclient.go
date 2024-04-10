@@ -41,6 +41,9 @@ func parseApiResponse(resp *resty.Response, err error) (*openblive.AppStartResul
 	if sceneResp.Code != 0 {
 		return nil, openblive.ErrUnknown.WithDetail(errors.New(sceneResp.Msg))
 	}
+	if sceneResp.Data.Error != nil && sceneResp.Data.Error.Code == 0 && sceneResp.Data.Error.Message == "" {
+		return sceneResp.Data.Result, nil
+	}
 	return sceneResp.Data.Result, sceneResp.Data.Error
 
 }

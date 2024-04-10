@@ -12,11 +12,11 @@ import (
 const ProviderName = "openblive"
 
 type OpenBLiveClient struct {
-	cfg             liveroom.LiveRoomConfig
+	cfg             liveroom.LiveRoom
 	openbliveClient *openblive.BLiveClient
 	conn            openblive.BLiveLongConnection
 	onMessage       func(msg *liveroom.Message)
-	onDisconnect    func(liveroom liveroom.LiveRoom)
+	onDisconnect    func(liveroom liveroom.ILiveRoom)
 	onStatusChange  func(connected bool)
 }
 
@@ -24,7 +24,7 @@ func NewOpenBLiveClientProvider(apiServer string, appId int64) liveroom.ILiveRoo
 	return &liveroom.LiveRoomProvider{
 		Name:        ProviderName,
 		Description: "open bilibili live protocol. enter client key to connect.",
-		Func: func(cfg liveroom.LiveRoomConfig) (liveroom.LiveRoom, error) {
+		Func: func(cfg liveroom.LiveRoom) (liveroom.ILiveRoom, error) {
 			if cfg.Provider != ProviderName {
 				return nil, errors.New("invalid provider name")
 			}
@@ -37,14 +37,15 @@ func NewOpenBLiveClientProvider(apiServer string, appId int64) liveroom.ILiveRoo
 }
 
 func (o *OpenBLiveClient) danmuHandler(data openblive.DanmakuData) {
-	if o.onMessage == nil {
+	msg := o.onMessage
+	if msg == nil {
 		return
 	}
 	roomId := strconv.Itoa(data.RoomID)
 	if data.FansMedalName == "" {
 		roomId = ""
 	}
-	o.onMessage(&liveroom.Message{
+	msg(&liveroom.Message{
 		User: liveroom.User{
 			Uid:       data.OpenID,
 			Username:  data.UName,
@@ -61,11 +62,11 @@ func (o *OpenBLiveClient) danmuHandler(data openblive.DanmakuData) {
 }
 
 func (o *OpenBLiveClient) disconnectHandler(conn openblive.BLiveLongConnection) {
-	if o.onStatusChange != nil {
-		o.onStatusChange(false)
+	if x := o.onStatusChange; x != nil {
+		x(false)
 	}
-	if o.onDisconnect != nil {
-		o.onDisconnect(o)
+	if x := o.onDisconnect; x != nil {
+		x(o)
 	}
 }
 
@@ -73,7 +74,7 @@ func (o *OpenBLiveClient) GetName() string {
 	return ProviderName
 }
 
-func (o *OpenBLiveClient) Config() *liveroom.LiveRoomConfig {
+func (o *OpenBLiveClient) Config() *liveroom.LiveRoom {
 	return &o.cfg
 }
 
@@ -87,26 +88,31 @@ func (o *OpenBLiveClient) Connect() error {
 	o.conn.OnDisconnect(o.disconnectHandler)
 	e := o.conn.EstablishConnection(context.Background())
 	if e == nil {
-		if o.onStatusChange != nil {
-			o.onStatusChange(true)
+		if handler := o.onStatusChange; handler != nil {
+			handler(true)
 		}
 	}
 	return e
 }
 
 func (o *OpenBLiveClient) Disconnect() error {
-	_ = o.conn.CloseConnection()
-	if o.onStatusChange != nil {
-		o.onStatusChange(false)
+	if o.conn == nil {
+		return nil
 	}
-	return o.openbliveClient.End()
+	_ = o.conn.CloseConnection()
+	o.conn = nil
+	if handler := o.onStatusChange; handler != nil {
+		handler(false)
+	}
+	e := o.openbliveClient.End()
+	return e
 }
 
 func (o *OpenBLiveClient) OnStatusChange(f func(connected bool)) {
 	o.onStatusChange = f
 }
 
-func (o *OpenBLiveClient) OnDisconnect(f func(liveroom liveroom.LiveRoom)) {
+func (o *OpenBLiveClient) OnDisconnect(f func(liveroom liveroom.ILiveRoom)) {
 	o.onDisconnect = f
 }
 
