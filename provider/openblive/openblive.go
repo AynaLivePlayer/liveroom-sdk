@@ -3,8 +3,7 @@ package openblive
 import (
 	"context"
 	"errors"
-	"github.com/AynaLivePlayer/liveroom"
-	"github.com/AynaLivePlayer/liveroom/utils"
+	"github.com/AynaLivePlayer/liveroom-sdk/utils"
 	openblive "github.com/aynakeya/open-bilibili-live"
 	"strconv"
 )
