@@ -13,7 +13,7 @@ const apiServer = "http://0.0.0.0:9090"
 
 func main() {
 	provider := webdm.NewWebDanmuClientProvider(apiServer)
-	room, _ := provider(liveroom.LiveRoomConfig{
+	room, _ := provider.CreateLiveRoom(liveroom.LiveRoomConfig{
 		Room:     "7777",
 		Provider: webdm.ProviderName,
 	})

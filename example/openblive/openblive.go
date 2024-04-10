@@ -13,7 +13,7 @@ const apiServer = "http://0.0.0.0:9090"
 
 func main() {
 	provider := openblive.NewOpenBLiveClientProvider(apiServer, 1661006726438)
-	room, _ := provider(liveroom.LiveRoomConfig{
+	room, _ := provider.CreateLiveRoom(liveroom.LiveRoomConfig{
 		Room:     "YOUR_CLIENT_KEY",
 		Provider: openblive.ProviderName,
 	})

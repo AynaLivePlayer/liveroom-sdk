@@ -5,7 +5,33 @@ type LiveRoomConfig struct {
 	Room     string `json:"room"`     // RoomID is the unique identifier of the live room
 }
 
-type LiveRoomProvider func(cfg LiveRoomConfig) (LiveRoom, error)
+func (l *LiveRoomConfig) Identifier() string {
+	return l.Provider + "_" + l.Room
+}
+
+type ILiveRoomProvider interface {
+	GetName() string
+	GetDescription() string
+	CreateLiveRoom(cfg LiveRoomConfig) (LiveRoom, error)
+}
+
+type LiveRoomProvider struct {
+	Name        string
+	Description string
+	Func        func(cfg LiveRoomConfig) (LiveRoom, error)
+}
+
+func (l *LiveRoomProvider) GetName() string {
+	return l.Name
+}
+
+func (l *LiveRoomProvider) GetDescription() string {
+	return l.Name
+}
+
+func (l *LiveRoomProvider) CreateLiveRoom(cfg LiveRoomConfig) (LiveRoom, error) {
+	return l.Func(cfg)
+}
 
 type UserMedal struct {
 	Name   string `json:"name"`

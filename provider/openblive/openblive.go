@@ -20,15 +20,19 @@ type OpenBLiveClient struct {
 	onStatusChange  func(connected bool)
 }
 
-func NewOpenBLiveClientProvider(apiServer string, appId int64) liveroom.LiveRoomProvider {
-	return func(cfg liveroom.LiveRoomConfig) (liveroom.LiveRoom, error) {
-		if cfg.Provider != ProviderName {
-			return nil, errors.New("invalid provider name")
-		}
-		return &OpenBLiveClient{
-			cfg:             cfg,
-			openbliveClient: openblive.NewBliveClient(appId, cfg.Room, newRemoteApiClient(apiServer)),
-		}, nil
+func NewOpenBLiveClientProvider(apiServer string, appId int64) liveroom.ILiveRoomProvider {
+	return &liveroom.LiveRoomProvider{
+		Name:        ProviderName,
+		Description: "open bilibili live protocol. enter client key to connect.",
+		Func: func(cfg liveroom.LiveRoomConfig) (liveroom.LiveRoom, error) {
+			if cfg.Provider != ProviderName {
+				return nil, errors.New("invalid provider name")
+			}
+			return &OpenBLiveClient{
+				cfg:             cfg,
+				openbliveClient: openblive.NewBliveClient(appId, cfg.Room, newRemoteApiClient(apiServer)),
+			}, nil
+		},
 	}
 }
 

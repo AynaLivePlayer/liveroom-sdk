@@ -20,21 +20,25 @@ type WebDanmuClient struct {
 	onStatusChange func(connected bool)
 }
 
-func NewWebDanmuClientProvider(apiServer string) liveroom.LiveRoomProvider {
-	return func(cfg liveroom.LiveRoomConfig) (liveroom.LiveRoom, error) {
-		if cfg.Provider != ProviderName {
-			return nil, errors.New("invalid provider name")
-		}
-		roomId, err := cast.ToIntE(cfg.Room)
-		if err != nil {
-			return nil, errors.New("invalid room id, should be integer")
-		}
-		room := &WebDanmuClient{
-			cfg:         cfg,
-			webDmClient: client.NewClientWithApi(roomId, &remoteApi{client: resty.New().SetBaseURL(apiServer)}),
-		}
-		room.webDmClient.OnDanmaku(room.danmuHandler)
-		return room, nil
+func NewWebDanmuClientProvider(apiServer string) liveroom.ILiveRoomProvider {
+	return &liveroom.LiveRoomProvider{
+		Name:        ProviderName,
+		Description: "default web protocol. enter room id to connect.",
+		Func: func(cfg liveroom.LiveRoomConfig) (liveroom.LiveRoom, error) {
+			if cfg.Provider != ProviderName {
+				return nil, errors.New("invalid provider name")
+			}
+			roomId, err := cast.ToIntE(cfg.Room)
+			if err != nil {
+				return nil, errors.New("invalid room id, should be integer")
+			}
+			room := &WebDanmuClient{
+				cfg:         cfg,
+				webDmClient: client.NewClientWithApi(roomId, &remoteApi{client: resty.New().SetBaseURL(apiServer)}),
+			}
+			room.webDmClient.OnDanmaku(room.danmuHandler)
+			return room, nil
+		},
 	}
 }
 

@@ -1,8 +1,8 @@
 package liveroom
 
-var _providers map[string]LiveRoomProvider = make(map[string]LiveRoomProvider)
+var _providers map[string]ILiveRoomProvider = make(map[string]ILiveRoomProvider)
 
-func RegisterProvider(name string, provider LiveRoomProvider) {
+func RegisterProvider(name string, provider ILiveRoomProvider) {
 	if _, ok := _providers[name]; ok {
 		panic("provider " + name + " already exists")
 		return
@@ -10,7 +10,7 @@ func RegisterProvider(name string, provider LiveRoomProvider) {
 	_providers[name] = provider
 }
 
-func GetProvider(name string) (LiveRoomProvider, bool) {
+func GetProvider(name string) (ILiveRoomProvider, bool) {
 	provider, ok := _providers[name]
 	return provider, ok
 }
