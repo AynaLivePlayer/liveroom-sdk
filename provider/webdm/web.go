@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/AynaLivePlayer/blivedm-go/client"
 	"github.com/AynaLivePlayer/blivedm-go/message"
+	"github.com/AynaLivePlayer/liveroom-sdk"
 	"github.com/AynaLivePlayer/liveroom-sdk/utils"
 	"github.com/go-resty/resty/v2"
 	"github.com/spf13/cast"

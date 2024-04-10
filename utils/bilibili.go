@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"github.com/AynaLivePlayer/liveroom-sdk"
+)
+
 func BilibiliGuardLevelToPrivilege(level int) int {
 	switch level {
 	case 1:
