@@ -1,5 +1,7 @@
 package liveroom
 
+import "sort"
+
 var _providers map[string]ILiveRoomProvider = make(map[string]ILiveRoomProvider)
 
 func RegisterProvider(provider ILiveRoomProvider) {
@@ -20,5 +22,8 @@ func ListAvailableProviders() []string {
 	for name := range _providers {
 		names = append(names, name)
 	}
+	sort.Slice(names, func(i, j int) bool {
+		return names[i] < names[j]
+	})
 	return names
 }
