@@ -18,6 +18,7 @@ type WebDanmuClient struct {
 	onMessage      func(msg *liveroom.Message)
 	onDisconnect   func(liveroom liveroom.ILiveRoom)
 	onStatusChange func(connected bool)
+	running        bool
 }
 
 func NewWebDanmuClientProvider(apiServer string) liveroom.ILiveRoomProvider {
@@ -35,6 +36,7 @@ func NewWebDanmuClientProvider(apiServer string) liveroom.ILiveRoomProvider {
 			room := &WebDanmuClient{
 				cfg:         cfg,
 				webDmClient: client.NewClientWithApi(roomId, &remoteApi{client: resty.New().SetBaseURL(apiServer)}),
+				running:     false,
 			}
 			room.webDmClient.OnDanmaku(room.danmuHandler)
 			return room, nil
@@ -71,10 +73,14 @@ func (w *WebDanmuClient) danmuHandler(data *message.Danmaku) {
 }
 
 func (w *WebDanmuClient) Connect() error {
+	if w.running {
+		return nil
+	}
 	err := w.webDmClient.Start()
 	if err == nil && w.onStatusChange != nil {
 		w.onStatusChange(true)
 	}
+	w.running = true
 	return err
 }
 
@@ -83,6 +89,7 @@ func (w *WebDanmuClient) Disconnect() error {
 	if w.onStatusChange != nil {
 		w.onStatusChange(false)
 	}
+	w.running = false
 	return nil
 }
 

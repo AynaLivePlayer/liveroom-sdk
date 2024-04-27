@@ -79,6 +79,10 @@ func (o *OpenBLiveClient) Config() *liveroom.LiveRoom {
 }
 
 func (o *OpenBLiveClient) Connect() error {
+	// if still running, return
+	if o.openbliveClient.Status() {
+		return nil
+	}
 	err := o.openbliveClient.Start()
 	if err != nil {
 		return err
