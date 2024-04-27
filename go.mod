@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/AynaLivePlayer/blivedm-go v0.0.0-20240408074929-6565ab41764b
-	github.com/aynakeya/open-bilibili-live v0.0.5
+	github.com/aynakeya/open-bilibili-live v0.0.6
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/spf13/cast v1.5.1
 )
