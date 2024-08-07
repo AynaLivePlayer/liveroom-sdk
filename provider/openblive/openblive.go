@@ -13,6 +13,7 @@ const ProviderName = "openblive"
 
 type OpenBLiveClient struct {
 	cfg             liveroom.LiveRoom
+	admins          map[string]int
 	openbliveClient *openblive.BLiveClient
 	conn            openblive.BLiveLongConnection
 	onMessage       func(msg *liveroom.Message)
@@ -45,11 +46,13 @@ func (o *OpenBLiveClient) danmuHandler(data openblive.DanmakuData) {
 	if data.FansMedalName == "" {
 		roomId = ""
 	}
+	_, isAdmin := o.admins[data.UName]
+	isAdmin = false
 	msg(&liveroom.Message{
 		User: liveroom.User{
 			Uid:       data.OpenID,
 			Username:  data.UName,
-			Admin:     false, // not supported by open bilibili live
+			Admin:     isAdmin, // not supported by open bilibili live
 			Privilege: utils.BilibiliGuardLevelToPrivilege(data.GuardLevel),
 			Medal: liveroom.UserMedal{
 				Name:   data.FansMedalName,
@@ -86,6 +89,12 @@ func (o *OpenBLiveClient) Connect() error {
 	err := o.openbliveClient.Start()
 	if err != nil {
 		return err
+	}
+	// get admin list
+	adminNames := getAdmins(o.openbliveClient.AppInfo.AnchorInfo.RoomID)
+	o.admins = make(map[string]int)
+	for _, name := range adminNames {
+		o.admins[name] = 1
 	}
 	o.conn = o.openbliveClient.GetLongConn()
 	o.conn.OnDanmu(o.danmuHandler)
