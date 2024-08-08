@@ -47,7 +47,6 @@ func (o *OpenBLiveClient) danmuHandler(data openblive.DanmakuData) {
 		roomId = ""
 	}
 	_, isAdmin := o.admins[data.UName]
-	isAdmin = false
 	msg(&liveroom.Message{
 		User: liveroom.User{
 			Uid:       data.OpenID,
