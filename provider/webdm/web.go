@@ -61,10 +61,10 @@ func (w *WebDanmuClient) danmuHandler(data *message.Danmaku) {
 			Uid:       cast.ToString(data.Sender.Uid),
 			Username:  data.Sender.Uname,
 			Admin:     data.Sender.Admin,
-			Privilege: data.Sender.GuardLevel,
+			Privilege: utils.BilibiliGuardLevelToPrivilege(data.Sender.GuardLevel),
 			Medal: liveroom.UserMedal{
 				Name:   data.Sender.Medal.Name,
-				Level:  utils.BilibiliGuardLevelToPrivilege(data.Sender.GuardLevel),
+				Level:  data.Sender.Medal.Level,
 				RoomID: cast.ToString(data.Sender.Medal.UpRoomId),
 			},
 		},
