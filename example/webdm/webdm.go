@@ -2,20 +2,29 @@ package main
 
 import (
 	"fmt"
+	"github.com/AynaLivePlayer/liveroom-sdk"
 	"github.com/AynaLivePlayer/liveroom-sdk/provider/webdm"
 	"os"
 	"os/signal"
 	"time"
 )
 
-const apiServer = "http://0.0.0.0:9090"
+const apiServer = "https://ayliveplayer.scene.aynakeya.com:10443"
+
+//const apiServer = "https://api.biliaudiobot.com/"
+
+// const apiServer = "https://ayliveplayer.scene.aynakeya.com:10443"
 
 func main() {
 	provider := webdm.NewWebDanmuClientProvider(apiServer)
-	room, _ := provider.CreateLiveRoom(liveroom.LiveRoomConfig{
-		Room:     "7777",
+	room, err := provider.CreateLiveRoom(liveroom.LiveRoom{
+		Room:     "3819533",
 		Provider: webdm.ProviderName,
 	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	room.OnMessage(func(msg *liveroom.Message) {
 		fmt.Println(msg.User.Username, msg.User.Uid, msg.User.Medal.Name, msg.Message)
 	})
@@ -28,7 +37,7 @@ func main() {
 			}
 		})
 	room.OnDisconnect(
-		func(liveroom liveroom.LiveRoom) {
+		func(liveroom liveroom.ILiveRoom) {
 			fmt.Println("Disconnected AAAAAAAa")
 		})
 	fmt.Println("connect", room.Connect())
