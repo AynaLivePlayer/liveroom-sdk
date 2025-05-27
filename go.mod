@@ -3,7 +3,7 @@ module github.com/AynaLivePlayer/liveroom-sdk
 go 1.20
 
 require (
-	github.com/AynaLivePlayer/blivedm-go v0.0.0-20250424151642-66dbc68632cf
+	github.com/AynaLivePlayer/blivedm-go v0.0.0-20250527143915-74cc4b2603bc
 	github.com/aynakeya/open-bilibili-live v0.0.7
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/spf13/cast v1.5.1
