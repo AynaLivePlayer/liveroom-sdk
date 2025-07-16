@@ -1,14 +1,16 @@
 module github.com/AynaLivePlayer/liveroom-sdk
 
-go 1.20
+go 1.23.0
+
+toolchain go1.24.4
 
 require (
-	github.com/AynaLivePlayer/blivedm-go v0.0.0-20250527143915-74cc4b2603bc
+	github.com/AynaLivePlayer/blivedm-go v0.0.0-20250629154348-690af765bfbc
 	github.com/aynakeya/open-bilibili-live v0.0.7
-	github.com/go-resty/resty/v2 v2.7.0
-	github.com/spf13/cast v1.5.1
-	github.com/stretchr/testify v1.8.4
-	github.com/tidwall/gjson v1.17.3
+	github.com/go-resty/resty/v2 v2.16.5
+	github.com/spf13/cast v1.9.2
+	github.com/stretchr/testify v1.10.0
+	github.com/tidwall/gjson v1.18.0
 )
 
 require (
@@ -19,8 +21,8 @@ require (
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
-	golang.org/x/net v0.0.0-20211029224645-99673261e6eb // indirect
-	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/net v0.42.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
